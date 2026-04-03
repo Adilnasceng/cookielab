@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CookieLab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="11" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+        <path d="M9 4.5v7L5 17.5a1.5 1.5 0 001.5 2h11a1.5 1.5 0 001.5-2L15 11.5V4.5" fill="#1a1a2e" stroke="#58a6ff" stroke-width="1.2" stroke-linejoin="round"/>
+        <rect x="8" y="3.5" width="8" height="1.8" rx="0.9" fill="#161b22" stroke="#58a6ff" stroke-width="1"/>
+        <ellipse cx="10.5" cy="15.5" rx="1" ry="1" fill="#58a6ff" opacity="0.8"/>
+        <ellipse cx="13.5" cy="17" rx="0.9" ry="0.9" fill="#3fb950" opacity="0.9"/>
+        <ellipse cx="11.5" cy="13" rx="0.8" ry="0.8" fill="#f0883e" opacity="0.9"/>
+      </svg>
+      <span class="header-title">CookieLab</span>
+    </div>
+    <span class="header-subtitle" id="headerRefresh">
+      <button class="btn-icon" id="refreshBtn" title="Reload cookies">⟳</button>
+    </span>
+  </header>
+
+  <!-- ===== DOMAIN BAR ===== -->
+  <div class="domain-bar">
+    <span class="domain-label">Domain:</span>
+    <span class="domain-value" id="domainValue">Loading...</span>
+    <span class="domain-cookie-count" id="cookieCount">0 cookies</span>
+  </div>
+
+  <!-- ===== TAB BAR ===== -->
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="cookies">🍪 Cookies</button>
+    <button class="tab-btn" data-tab="jwt">🔐 JWT Decoder</button>
+    <button class="tab-btn" data-tab="snapshots">📸 Snapshots</button>
+    <button class="tab-btn" data-tab="security">🛡 Security</button>
+  </nav>
+
+  <!-- ============================= -->
+  <!-- TAB: COOKIES                  -->
+  <!-- ============================= -->
+  <div class="tab-panel active" id="tab-cookies">
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <input
+        type="search"
+        class="search-input"
+        id="searchInput"
+        placeholder="Search by name or value..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="btn btn-primary" id="addCookieBtn" title="Add new cookie">+ Add</button>
+      <button class="btn btn-danger"  id="deleteAllBtn" title="Delete all cookies for this domain">🗑 All</button>
+    </div>
+
+    <!-- Cookie Table -->
+    <div class="table-container" id="cookieTableContainer">
+      <table class="cookie-table" id="cookieTable">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-value">Value</th>
+            <th class="col-domain">Domain</th>
+            <th class="col-path">Path</th>
+            <th class="col-exp">Expires</th>
+            <th class="col-flags">Flags</th>
+            <th class="col-act">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="cookieTableBody">
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+      <div class="empty-state hidden" id="cookieEmptyState">
+        <span class="empty-icon">🍪</span>
+        <div>No cookies found for this domain</div>
+        <div class="text-muted" style="font-size:10px">Try navigating to a page or clearing your search</div>
+      </div>
+    </div>
+
+    <!-- Add Cookie Form (hidden by default) -->
+    <div class="add-cookie-form" id="addCookieForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Name *</label>
+          <input type="text" class="form-input" id="newName" placeholder="cookie_name" spellcheck="false" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Value</label>
+          <input type="text" class="form-input" id="newValue" placeholder="cookie_value" spellcheck="false" autocomplete="off" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Domain</label>
+          <input type="text" class="form-input" id="newDomain" placeholder="auto-fill" spellcheck="false" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Path</label>
+          <input type="text" class="form-input" id="newPath" placeholder="/" spellcheck="false" autocomplete="off" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expires (days from now)</label>
+          <input type="number" class="form-input" id="newExpires" placeholder="Session (no expiry)" min="0" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">SameSite</label>
+          <select class="form-select" id="newSameSite">
+            <option value="no_restriction">None</option>
+            <option value="lax" selected>Lax</option>
+            <option value="strict">Strict</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-checkboxes">
+        <label class="form-checkbox">
+          <input type="checkbox" id="newSecure" /> Secure
+        </label>
+        <label class="form-checkbox">
+          <input type="checkbox" id="newHttpOnly" /> HttpOnly
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn" id="cancelAddBtn">Cancel</button>
+        <button class="btn btn-primary" id="confirmAddBtn">💾 Save Cookie</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-cookies -->
+
+  <!-- ============================= -->
+  <!-- TAB: JWT DECODER              -->
+  <!-- ============================= -->
+  <div class="tab-panel" id="tab-jwt">
+    <div class="jwt-panel">
+      <div class="jwt-input-area">
+        <textarea
+          class="jwt-textarea"
+          id="jwtInput"
+          placeholder="Paste JWT token here, or click 🔑 on a cookie row to auto-fill..."
+          spellcheck="false"
+          autocomplete="off"
+        ></textarea>
+        <div class="jwt-toolbar">
+          <button class="btn" id="jwtDecodeBtn">⚡ Decode</button>
+          <button class="btn" id="jwtClipboardBtn" title="Paste from clipboard">📋 Paste</button>
+          <button class="btn btn-danger" id="jwtClearBtn">✕ Clear</button>
+          <span class="jwt-status empty" id="jwtStatus">Waiting for input</span>
+        </div>
+      </div>
+
+      <div class="jwt-results" id="jwtResults">
+        <div class="jwt-empty" id="jwtEmpty">
+          <span class="empty-icon">🔐</span>
+          <div>Paste a JWT token above and hit Decode</div>
+          <div class="text-muted" style="font-size:10px">Supports HS256, RS256, and other algorithms</div>
+        </div>
+
+        <!-- Header section -->
+        <div class="jwt-section hidden" id="jwtHeaderSection">
+          <div class="jwt-section-header">
+            <span class="jwt-section-label header-label">Header</span>
+          </div>
+          <div class="jwt-json-box" id="jwtHeaderBox"></div>
+        </div>
+
+        <!-- Payload section -->
+        <div class="jwt-section hidden" id="jwtPayloadSection">
+          <div class="jwt-section-header">
+            <span class="jwt-section-label payload-label">Payload</span>
+            <span class="jwt-exp-badge none" id="jwtExpBadge">No exp claim</span>
+          </div>
+          <div class="jwt-json-box" id="jwtPayloadBox"></div>
+        </div>
+
+        <!-- Signature section -->
+        <div class="jwt-section hidden" id="jwtSigSection">
+          <div class="jwt-section-header">
+            <span class="jwt-section-label sig-label">Signature</span>
+            <button class="btn-icon" id="jwtCopySigBtn" title="Copy signature">📋</button>
+          </div>
+          <div class="jwt-sig-box" id="jwtSigBox"></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /tab-jwt -->
+
+  <!-- ============================= -->
+  <!-- TAB: SNAPSHOTS                -->
+  <!-- ============================= -->
+  <div class="tab-panel" id="tab-snapshots">
+    <div class="snapshots-panel">
+      <div class="snapshots-toolbar">
+        <div class="snapshot-name-row">
+          <input
+            type="text"
+            class="snapshot-name-input"
+            id="snapshotNameInput"
+            placeholder="Snapshot name (e.g. logged-in, guest)..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="btn btn-primary" id="saveSnapshotBtn">📸 Save</button>
+        </div>
+        <div class="snapshot-io-row">
+          <button class="btn" id="exportCookiesBtn" title="Export current cookies as JSON">⬇ Export JSON</button>
+          <button class="btn" id="importCookiesBtn" title="Import cookies from JSON file">⬆ Import JSON</button>
+          <input type="file" class="hidden-file-input" id="importFileInput" accept=".json" />
+        </div>
+      </div>
+
+      <div class="snapshots-list" id="snapshotsList">
+        <div class="empty-state" id="snapshotsEmptyState">
+          <span class="empty-icon">📸</span>
+          <div>No snapshots saved yet</div>
+          <div class="text-muted" style="font-size:10px">Save the current cookie state to restore it later</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /tab-snapshots -->
+
+  <!-- ============================= -->
+  <!-- TAB: SECURITY                 -->
+  <!-- ============================= -->
+  <div class="tab-panel" id="tab-security">
+    <div class="security-panel">
+
+      <div class="security-summary" id="securitySummary">
+        <div class="security-score-badge score-ok" id="securityScoreBadge">
+          <span class="score-number" id="securityScoreNum">–</span>
+          <span class="score-label">Issues</span>
+        </div>
+        <div class="security-stats" id="securityStats">
+          <div class="stat-item">
+            <div class="stat-dot danger"></div>
+            <span id="statDangers">0 critical issues</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot warning"></div>
+            <span id="statWarnings">0 warnings</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot ok"></div>
+            <span id="statOk">0 cookies clean</span>
+          </div>
+        </div>
+        <button class="btn" id="refreshSecurityBtn" title="Re-analyze">⟳</button>
+      </div>
+
+      <div class="security-list" id="securityList">
+        <div class="empty-state hidden" id="securityEmptyState">
+          <span class="empty-icon">🛡</span>
+          <div>No cookies to analyze</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /tab-security -->
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    ⚠ For educational / development use only &nbsp;·&nbsp; CookieLab v1.0
+  </footer>
+
+  <!-- ===== BASE64 DECODE MODAL ===== -->
+  <div class="modal-overlay" id="b64Modal">
+    <div class="modal">
+      <div class="modal-title">Base64 Decoded Value</div>
+      <div class="modal-body" id="b64ModalBody"></div>
+      <div class="modal-actions">
+        <button class="btn" id="b64CopyBtn">📋 Copy</button>
+        <button class="btn" id="b64CloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VALUE TOOLTIP MODAL ===== -->
+  <div class="modal-overlay" id="valueModal">
+    <div class="modal">
+      <div class="modal-title" id="valueModalTitle">Cookie Value</div>
+      <div class="modal-body" id="valueModalBody" style="word-break:break-all; white-space:pre-wrap;"></div>
+      <div class="modal-actions">
+        <button class="btn" id="valueCopyBtn">📋 Copy</button>
+        <button class="btn" id="valueJwtBtn" class="hidden">🔐 Send to JWT</button>
+        <button class="btn" id="valueB64Btn" class="hidden">🔢 Base64 Decode</button>
+        <button class="btn" id="valueCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

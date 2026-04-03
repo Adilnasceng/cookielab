@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "CookieLab",
+  "version": "1.0.0",
+  "description": "Developer-focused cookie manager for security learning and backend testing.",
+  "permissions": [
+    "cookies",
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "CookieLab",
+    "default_icon": {
+      "128": "icons/icon.svg"
+    }
+  },
+  "background": {
+    "service_worker": "background/service_worker.js"
+  },
+  "icons": {
+    "128": "icons/icon.svg"
+  }
+}

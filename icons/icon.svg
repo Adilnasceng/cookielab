@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#0d1117"/>
+  <circle cx="64" cy="64" r="60" fill="none" stroke="#30363d" stroke-width="2"/>
+
+  <!-- Flask body -->
+  <path d="M50 30 L50 58 L32 92 Q28 100 36 104 L92 104 Q100 100 96 92 L78 58 L78 30 Z"
+        fill="#1a1a2e" stroke="#58a6ff" stroke-width="2.5" stroke-linejoin="round"/>
+
+  <!-- Flask neck top bar -->
+  <rect x="46" y="26" width="36" height="7" rx="3.5"
+        fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+
+  <!-- Liquid fill inside flask -->
+  <path d="M40 88 Q37 96 44 100 L84 100 Q91 96 88 88 L68 55 L60 55 Z"
+        fill="#58a6ff" opacity="0.25"/>
+  <path d="M34 98 Q32 104 40 105 L88 105 Q96 104 94 98 Z"
+        fill="#58a6ff" opacity="0.4"/>
+
+  <!-- Bubbles in flask -->
+  <circle cx="58" cy="82" r="4" fill="#58a6ff" opacity="0.6"/>
+  <circle cx="70" cy="90" r="3" fill="#3fb950" opacity="0.7"/>
+  <circle cx="63" cy="96" r="2.5" fill="#58a6ff" opacity="0.5"/>
+
+  <!-- Cookie dots on flask -->
+  <circle cx="56" cy="70" r="2" fill="#f0883e" opacity="0.9"/>
+  <circle cx="66" cy="75" r="2" fill="#f0883e" opacity="0.9"/>
+  <circle cx="74" cy="68" r="2" fill="#f0883e" opacity="0.9"/>
+
+  <!-- Lock icon top right -->
+  <rect x="82" y="20" width="18" height="14" rx="3" fill="#3fb950" opacity="0.9"/>
+  <path d="M86 20 Q86 14 91 14 Q96 14 96 20" fill="none" stroke="#3fb950" stroke-width="2.5" opacity="0.9"/>
+  <rect x="88.5" y="24" width="5" height="6" rx="1" fill="#0d1117"/>
+</svg>
