@@ -98,16 +98,9 @@ cookielab/
 
 <div align="center">
 
-## License
+**MIT License © 2026 Adil NAS**
 
-This project is licensed under the [MIT License](LICENSE).
-
-## Author
-
-**Adil NAS** — [GitHub](https://github.com/Adilnasceng) · [Email](mailto:adilnasceng@gmail.com)
-
----
-
-[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-red?style=for-the-badge&logo=github-sponsors)](https://github.com/sponsors/Adilnasceng)
+[![GitHub](https://img.shields.io/badge/GitHub-Adilnasceng-181717?style=flat-square&logo=github)](https://github.com/Adilnasceng)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-EC4899?style=flat-square)](https://github.com/sponsors/Adilnasceng)
 
 </div>
