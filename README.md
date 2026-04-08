@@ -9,6 +9,9 @@
 ![Chrome](https://img.shields.io/badge/Chrome-Extension-green?style=flat-square&logo=googlechrome)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 
+
+![CookieLab Screenshot](assets/screenshot.png)
+
 </div>
 
 ---
